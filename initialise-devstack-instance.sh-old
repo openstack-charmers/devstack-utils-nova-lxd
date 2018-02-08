@@ -1,0 +1,58 @@
+#!/bin/bash
+
+_dir="$( cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd)"
+_script=$( basename $0 )
+
+function usage {
+	printf "\nInitialise the devstack instance.\n"
+	printf "\nUSAGE:\n\n${_script} [-h|--help] <server-name>\n"
+	printf "\nThis script copies across the configuration files and a configure\n"
+	printf "script that will configure devstack for running in serverstack.\n"
+	printf "\n\nwhere:\n"
+	printf " -h | --help           : this usage page\n"
+	printf " <server-name|IP addr> : the server name (e.g. devstack)\n\n"
+	printf "The server-name should ideally be DNS resolvable from your machine.\n"
+	printf "If not, then use the IP address for the build script.\n\n"
+	printf "The env var DEVSTACK_SSH_IDENTITY should be set with the identity file\n"
+	printf "for the keypair used to create the devstack server\n\n"
+}
+
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+	usage
+	exit 0
+fi
+
+if [[ -z $1 ]]; then
+	usage
+	echo "ERROR! Need to supply the server name"
+	exit 1
+fi
+DEVSTACK_NAME=${1}
+
+if [[ -z $DEVSTACK_SSH_IDENTITY ]]; then
+	echo "ERROR: Env var DEVSTACK_SSH_IDENTITY is not set"
+	exit 1
+fi
+
+_ssh_options="-i $DEVSTACK_SSH_IDENTITY -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
+target=configure-for-devstack.sh
+
+echo "$_dir is the source"
+# copy the files across
+ssh $_ssh_options ubuntu@$DEVSTACK_NAME 'mkdir -p configure'
+scp $_ssh_options files/* ubuntu@$DEVSTACK_NAME:configure/
+
+printf "Copied files to $DEVSTACK_NAME\n"
+printf "\nWould you like to run the ${target} script on $DEVSTACK_NAME?\n"
+printf "Note: you need to have the ssh identity file associated with the keypair\n"
+printf "associated with ${target} in the environment variable DEVSTACK_SSH_IDENTITY\n\n"
+read -r -p "Are you sure? [y/N]:" response
+response=${response,,}		# to lower case
+if [[ "$response" =~ ^(yes|y)$ ]]; then
+
+	echo "Running the script"
+	ssh $_ssh_options ubuntu@$DEVSTACK_NAME "configure/${target}"
+	printf "\n\nFinished.\n"
+else
+	echo "Now ssh into devstack and run 'configure/${target}' on $DEVSTACK_NAME"
+fi

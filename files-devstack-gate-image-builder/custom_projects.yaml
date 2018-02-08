@@ -1,0 +1,19 @@
+## The openstack-repos element caches every git repo, wihch can take
+## quite some time.  We can override this, but some minimal repos are
+## required for a successful build.  For speeding up builds when
+## you're testing the following should work, but be very careful
+## stripping things out when generating real images.
+
+## add to /tmp/custom_projects.yaml:
+##
+## - project: openstack-infra/project-config
+## - project: openstack-infra/system-config
+## - project: openstack-dev/devstack
+## - project: openstack/tempest
+
+- project: openstack-infra/project-config
+- project: openstack-infra/system-config
+- project: openstack-infra/openstack-zuul-jobs
+- project: openstack-dev/devstack
+- project: openstack/tempest
+- project: openstack/nova
