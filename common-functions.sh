@@ -35,6 +35,32 @@ function does_instance_exist {
 }
 
 
+## get the public ip for an instance by name or id
+# returns $? == 1 if the instance doesn't exist
+function find_floating_ip_for {
+	assert_os_vars_are_set
+	local _addrs
+	local addresses
+	if [[ -z "${1}" ]]; then
+		echo "Must pass a server name/id to $0"
+		exit 1
+	fi
+	_addr_line=$(openstack server show ${1} -f shell | grep addresses)
+	if [[ "$?" == "1" ]]; then
+		exit 1
+	fi
+	# eval the shell line
+	eval "$_addr_line"
+	IFS=', ' read -r -a _addrs <<< "$_addr_line"
+	if [[ "${#_addrs[@]}" == "1" ]]; then
+		unset floating_ip
+	fi
+	# the public address is the 2nd column
+	floating_ip=$(echo "${_addrs[1]}" | tr -d '"\n')
+}
+
+
+
 ## see if an key-pair exists; pass the variable as the first param
 # returns 1 if the key-pair does exist
 function does_keypair_exist {
