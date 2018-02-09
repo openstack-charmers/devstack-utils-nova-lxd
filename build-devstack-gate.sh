@@ -80,7 +80,7 @@ echo "Creating the server and applying an IP address ..."
 DONT_CONFIRM="true" $_dir/create-instance.sh ${INSTANCE_NAME} -i ${IMAGE_NAME}
 echo "Done creating instance."
 
-echo "Doing the initalisation to prepare for building the image ..."
+echo "Doing the initalisation to prepare the instance ..."
 # get the IP address of the next stage  to $floating_ip
 find_floating_ip_for ${INSTANCE_NAME}
 $_dir/initialise-devstack-gate.sh $floating_ip

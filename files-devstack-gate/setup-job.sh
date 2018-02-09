@@ -7,6 +7,7 @@ _dir="$( cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd)"
 _script=$( basename $0 )
 
 source ${_dir}/devstack-vars
+source ${_dir}/proxy-vars
 
 mkdir -p $WORKSPACE
 

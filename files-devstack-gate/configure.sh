@@ -77,3 +77,25 @@ IFS=$_ifs
 sudo -u jenkins mkdir /home/jenkins/bin
 sudo cp ${_dir}/setup-job.sh /home/jenkins/bin
 sudo chown jenkins.jenkins /home/jenkins/bin/setup-job.sh
+sudo cp ${_dir}/no-proxy.sh /home/jenkins/bin
+sudo chown jenkins.jenkins /home/jenkins/bin/no-proxy.sh
+sudo cp ${_dir}/devstack-vars /home/jenkins/bin
+sudo chown jenkins.jenkins /home/jenkins/bin/devstack-vars
+sudo cp ${_dir}/proxy-vars /home/jenkins/bin
+sudo chown jenkins.jenkins /home/jenkins/bin/proxy-vars
+
+# add sourcing the vars to the .profile for jenkins
+sudo -u jenkins sed -i "/devstack-vars\$/d" /home/jenkins/.profile
+echo "source \$HOME/bin/devstack-vars" | sudo -u jenkins tee -a /home/jenkins/.profile
+
+# copy the authorized keys over so we can login as jenkins
+sudo cp /home/devuser/.ssh/authorized_keys /home/jenkins/.ssh/authorized_keys
+sudo chown jenkins.jenkins /home/jenkins/.ssh/authorized_keys
+
+# fix the hostname
+echo "devstack-gate" | sudo tee /etc/hostname
+
+# finally run the setup-job.sh script as the jenkins user
+sudo -u jenkins HOME=/home/jenkins /home/jenkins/bin/setup-job.sh
+
+echo "Configure Done."
