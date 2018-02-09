@@ -60,6 +60,7 @@ function copy_files {
 
 	echo "$_dir is the source"
 	# copy the files across
+	wait_for_ssh "$_ssh_options $remote_user@$SERVER_NAME"
 	echo "Copy files-${_type}/* to $remote_user@$SERVER_NAME:configure/."
 	ssh $_ssh_options $remote_user@$SERVER_NAME 'mkdir -p configure'
 	scp $_ssh_options -r files-${_type}/* $remote_user@$SERVER_NAME:configure/

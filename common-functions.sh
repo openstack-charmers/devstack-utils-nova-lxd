@@ -22,11 +22,41 @@ function assert_os_vars_are_set {
 }
 
 
+## Assert that the ssh vars are set for getting keys to instances, etc.
+function assert_ssh_vars_are_set {
+	local _exit
+	if [[ -z "$DEVSTACK_KEYPAIR_NAME" ]]; then
+		echo "the \$DEVSTACK_KEYPAIR_NAME env var is not set"
+		_exit=1
+	fi
+	if [[ -z "$DEVSTACK_SSH_IDENTITY" ]]; then
+		echo "the \$DEVSTACK_SSH_IDENTITY for the private key is not set"
+		_exit=1
+	fi
+	if [[ ! -z $_exit ]]; then
+		exit 1
+	fi
+}
+
+
 ## see if an instance exists; pass the variable as the first param
 # returns 1 if the instance does exist
 function does_instance_exist {
 	assert_os_vars_are_set
 	openstack server list -c Name -f value | egrep "^${1}$" 2>&1 > /dev/null
+	if [[ "$?" == "1" ]]; then
+		return 0
+	else
+		return 1
+	fi
+}
+
+
+## see if an image exists; pass the variable as the first param
+# returns 1 if the instance does exist
+function does_image_exist {
+	assert_os_vars_are_set
+	openstack image show $1 2>&1 > /dev/null
 	if [[ "$?" == "1" ]]; then
 		return 0
 	else
@@ -59,6 +89,54 @@ function find_floating_ip_for {
 	floating_ip=$(echo "${_addrs[1]}" | tr -d '"\n')
 }
 
+
+## wait for the server to answer on the ssh port
+# $1 is the keyfile
+# $2 is the options
+# $3 is the username@server details
+function wait_for_ssh {
+	local maxConnectionAttempts=10
+	local sleepSeconds=5
+	echo "Checking for ssh connection ..."
+	local index=1
+	while (( $index <= $maxConnectionAttempts )); do
+		ssh $1 echo
+		case $? in
+			0) echo "${index}> Ready"; break ;;
+			*) echo "${index} of ${maxConnectionAttempts}> Not reading, waiting ${sleepSeconds} seconds ...";;
+		esac
+		sleep $sleepSeconds
+		(( index+=1 ))
+	done
+}
+
+
+## run a remote command on the server
+# $1 = identity file of public key
+# $2 = user to run at remote command
+# $3 = server or IP to run the command on
+# $4 = the command to run
+function run_remote_cmd {
+	local _identity_file=${1}
+	local _user=${2}
+	local _server=${3}
+	local _cmd=${4}
+	local _ssh_options="-i ${_identity_file} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
+	ssh ${_ssh_options} ${_user}@${_server} "'${_cmd}'"
+}
+
+
+## add a hostname to the /etc/hosts file; needs sudo
+# the hostname is in $1 and the ip address in $2
+# note that the env DEVSTACK_MODIFY_ETC_HOSTS needs to be set for this to work
+function add_host_to_hosts {
+	local _host_name=$1
+	local _ip_address=$2
+	if [[ ! -z ${DEVSTACK_MODIFY_ETC_HOSTS} ]]; then
+		sudo sed -i "/${_host_name}\$/d" /etc/hosts
+		echo "${_ip_address}	${_host_name}" | sudo tee -a /etc/hosts
+	fi
+}
 
 
 ## see if an key-pair exists; pass the variable as the first param

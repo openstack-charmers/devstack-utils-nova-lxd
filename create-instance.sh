@@ -1,6 +1,8 @@
 #!/bin/bash
 
 # Build a devstack test machine in serverstack.
+# if the DONT_CONFIRM environment variable is set then the script doesn't ask for confirmation
+
 # at least 4GB RAM and 2 CPUs
 # This is an m1.medium at the moment.
 
@@ -105,7 +107,11 @@ printf "Flavor: $FLAVOR\n"
 #printf "Security Group: $SECURITY_GROUP\n\n"
 
 # Ask, response is in ${response}, ${_yes} is '1' or unset if not.
-are_you_sure "Are you sure?"
+if [[ -z "${DONT_CONFIRM}" ]]; then
+	are_you_sure "Are you sure?"
+else
+	_yes=1
+fi
 if [[ ! -z "${_yes}" ]]; then
 	echo "Creating the server ... might take a while ..."
 	openstack server create --wait \
@@ -129,3 +135,5 @@ get_floating_ip_address
 echo "Assigning $floating_ip_address to $DEVSTACK_NAME"
 openstack server add floating ip "$DEVSTACK_NAME" "$floating_ip_address"
 
+# add it to the /etc/hosts file -- but only if $DEVSTACK_MODIFY_ETC_HOSTS is set
+add_host_to_hosts ${DEVSTACK_NAME} ${floating_ip_address}

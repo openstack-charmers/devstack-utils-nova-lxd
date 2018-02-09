@@ -40,6 +40,9 @@ if (( $_lines_ours > $_lines_theirs )); then
 	#sudo -Eu root bash -c '$_cmd'
 	sudo DIR=$_dir su -p - root -c 'cat "$DIR/etc-environment" >> /etc/environment'
 fi
+# also fix the proxy-vars localaddress
+sed -i s/localaddress/$_ip_address/g "$_dir/proxy-vars"
+
 
 # etc-systemd-system.conf
 # also append the two lines to /etc/systemd/system.conf
