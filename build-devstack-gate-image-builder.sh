@@ -91,7 +91,6 @@ find_floating_ip_for ${INSTANCE_NAME}
 # save the public keyfile to ${_keyfile_pub}
 openstack keypair show ${DEVSTACK_KEYPAIR_NAME} --public-key > ${_keyfile_pub}
 $_dir/initialise-devstack-gate-image-builder.sh $floating_ip ${_keyfile_pub}
-initialise_instance
 echo "Done initialising image."
 
 # Phase 2 - initialise the instance to build the image

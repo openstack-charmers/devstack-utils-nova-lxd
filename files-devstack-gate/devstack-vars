@@ -1,0 +1,10 @@
+# setup the vars for devstack-gate to work
+export REPO_URL=https://git.openstack.org
+export ZUUL_URL=$HOME/workspace-cache
+export ZUUL_REF=HEAD
+export WORKSPACE=$HOME/workspace/testing
+
+export ZUUL_PROJECT=openstack/nova-lxd
+export ZUUL_BRANCH=${ZUUL_BRANCH:-master}
+
+# vim: filetype=sh

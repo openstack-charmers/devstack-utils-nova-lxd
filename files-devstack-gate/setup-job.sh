@@ -3,14 +3,12 @@
 # branch is master unless ZUUL_BRANCH is already set
 # this script should be run by the jenkins user.
 
-export REPO_URL=https://git.openstack.org
-export ZUUL_URL=$HOME/workspace-cache
-export ZUUL_REF=HEAD
-export WORKSPACE=$HOME/workspace/testing
-mkdir -p $WORKSPACE
+_dir="$( cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd)"
+_script=$( basename $0 )
 
-export ZUUL_PROJECT=openstack/nova-lxd
-export ZUUL_BRANCH=${ZUUL_BRANCH:-master}
+source ${_dir}/devstack-vars
+
+mkdir -p $WORKSPACE
 
 git clone $REPO_URL/$ZUUL_PROJECT $ZUUL_URL/$ZUUL_PROJECT \
 	&& cd $ZUUL_URL/$ZUUL_PROJECT \
