@@ -1,0 +1,19 @@
+_OS_PARAMS=$(env | awk 'BEGIN {FS="="} /^OS_/ {print $1;}' | paste -sd ' ')
+for param in $_OS_PARAMS; do
+    unset $param
+done
+unset _OS_PARAMS
+export OS_AUTH_URL=<url of keystone>
+export OS_USERNAME=<username>
+export OS_PASSWORD=<password>
+export OS_USER_DOMAIN_NAME=<user domain naem>
+export OS_PROJECT_NAME=<project name>
+export OS_PROJECT_ID=<project id>
+export OS_PROJECT_DOMAIN_NAME=<project domain name>
+export OS_AUTH_VERSION=3
+export OS_IDENTITY_API_VERSION=3
+export OS_REGION_NAME=<name of the region name in openstack>
+
+# useful for devstack
+export DEVSTACK_KEYPAIR_NAME=<keypair name in openstack to use>
+export DEVSTACK_SSH_IDENTITY=<file including path of where to find the private key for above keypair>
