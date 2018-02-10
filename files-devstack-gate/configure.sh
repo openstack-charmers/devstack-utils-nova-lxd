@@ -15,6 +15,10 @@ echo "nameserver 10.5.0.2" | sudo tee /etc/resolv.conf
 
 # and fix our name to 'devstack-gate'
 echo "devstack-gate" | sudo tee /etc/hostname
+sudo hostname devstack-gate
+
+# also fix the cannot resolve hostname issue
+echo "127.0.1.1	devstack-gate" | sudo tee -a /etc/hosts
 
 echo "jenkins ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/jenkins
 
@@ -43,13 +47,13 @@ cp "${_dir}/no-proxy.sh" "$HOME/bin/no-proxy-sh"
 # first we need to change 'localaddress' to the local IP address in the no_proxy lines
 _ip_address=$(ip a | grep 10.5 | awk '{print $2}' | tr "/" "\n" | head -1 | tr -d "\n")
 sed -i s/localaddress/$_ip_address/g "$_dir/etc-environment"
+sed -i s/localaddress/$_ip_address/g "$_dir/proxy-vars"
 # add the etc-environment lines to /etc/environment if the line length is less
 # than that of our etc-environment
-_lines_ours=$(cat etc-environment | wc -l)
+_lines_ours=$(cat ${_dir}/etc-environment | wc -l)
 _lines_theirs=$(cat /etc/environment | wc -l)
 if (( $_lines_ours > $_lines_theirs )); then
 	echo "Updating /etc/environment"
-	#sudo -Eu root bash -c '$_cmd'
 	sudo DIR=$_dir su -p - root -c 'cat "$DIR/etc-environment" >> /etc/environment'
 fi
 
@@ -83,6 +87,8 @@ sudo cp ${_dir}/devstack-vars /home/jenkins/bin
 sudo chown jenkins.jenkins /home/jenkins/bin/devstack-vars
 sudo cp ${_dir}/proxy-vars /home/jenkins/bin
 sudo chown jenkins.jenkins /home/jenkins/bin/proxy-vars
+sudo cp ${_dir}/run-legacy-tempest-dsvm-lxd-ovs.sh /home/jenkins/bin
+sudo chown jenkins.jenkins /home/jenkins/bin/run-legacy-tempest-dsvm-lxd-ovs.sh
 
 # add sourcing the vars to the .profile for jenkins
 sudo -u jenkins sed -i "/devstack-vars\$/d" /home/jenkins/.profile
@@ -91,9 +97,6 @@ echo "source \$HOME/bin/devstack-vars" | sudo -u jenkins tee -a /home/jenkins/.p
 # copy the authorized keys over so we can login as jenkins
 sudo cp /home/devuser/.ssh/authorized_keys /home/jenkins/.ssh/authorized_keys
 sudo chown jenkins.jenkins /home/jenkins/.ssh/authorized_keys
-
-# fix the hostname
-echo "devstack-gate" | sudo tee /etc/hostname
 
 # finally run the setup-job.sh script as the jenkins user
 sudo -u jenkins HOME=/home/jenkins /home/jenkins/bin/setup-job.sh

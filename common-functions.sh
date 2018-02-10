@@ -103,7 +103,7 @@ function wait_for_ssh {
 		ssh $1 echo
 		case $? in
 			0) echo "${index}> Ready"; break ;;
-			*) echo "${index} of ${maxConnectionAttempts}> Not reading, waiting ${sleepSeconds} seconds ...";;
+			*) echo "${index} of ${maxConnectionAttempts}> Not ready, waiting ${sleepSeconds} seconds ...";;
 		esac
 		sleep $sleepSeconds
 		(( index+=1 ))
