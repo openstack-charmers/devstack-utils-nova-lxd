@@ -1,0 +1,2 @@
+Acquire::http::proxy "http://squid.internal:3128";
+Acquire::https::proxy "https://squid.internal:3128";

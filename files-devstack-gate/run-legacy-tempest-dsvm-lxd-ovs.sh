@@ -11,17 +11,22 @@ export DEVSTACK_GATE_NEUTRON=1
 export DEVSTACK_GATE_VIRT_DRIVER="lxd"
 export PROJECTS="openstack/nova-lxd $PROJECTS"
 
+cat << 'EOF' > "/tmp/dg-local.conf"
+[[local|localrc]]
+enable_plugin nova-lxd git://git.openstack.org/openstack/nova-lxd
+
+EOF
 
 # keep localrc to be able to set some vars in pre_test hook
 export KEEP_LOCALRC=1
 
 function pre_test_hook {
-source $HOME/workspace-cache/openstack/nova-lxd/contrib/ci/pre_test_hook.sh
+	source $HOME/workspace-cache/openstack/nova-lxd/contrib/ci/pre_test_hook.sh
 }
 export -f pre_test_hook
 
 function post_test_hook {
-source $HOME/workspace-cache/openstack/nova-lxd/contrib/ci/post_test_hook.sh
+	source $HOME/workspace-cache/openstack/nova-lxd/contrib/ci/post_test_hook.sh
 }
 export -f post_test_hook
 

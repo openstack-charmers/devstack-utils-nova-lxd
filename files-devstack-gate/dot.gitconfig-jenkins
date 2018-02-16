@@ -1,0 +1,8 @@
+[color]
+  ui = auto
+[url "https://github.com"]
+  insteadOf = git://git.openstack.org
+[http]
+  proxy = http://squid.internal:3128
+[https]
+  proxy = https://squid.internal:3128
