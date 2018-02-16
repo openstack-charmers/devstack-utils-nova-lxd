@@ -13,4 +13,5 @@ export EXTRA_ELEMENTS=devuser
 export DIB_DEV_USER_PWDLESS_SUDO=1
 export DIB_DEV_USER_PASSWORD=devuser
 
-export DIB_CUSTOM_PROJECTS_LIST_URL=file:///$HOME/configure/custom_projects.yaml
+# Disabled to build a 'full' devstack-gate image
+#export DIB_CUSTOM_PROJECTS_LIST_URL=file:///$HOME/configure/custom_projects.yaml
