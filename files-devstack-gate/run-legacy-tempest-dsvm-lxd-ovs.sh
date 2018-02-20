@@ -36,5 +36,5 @@ export DEVSTACK_GATE_SETTINGS=$HOME/workspace-cache/openstack/nova-lxd/devstack/
 cd $HOME/workspace/testing
 
 cp devstack-gate/devstack-vm-gate-wrap.sh ./safe-devstack-vm-gate-wrap.sh
-./safe-devstack-vm-gate-wrap.sh
+./safe-devstack-vm-gate-wrap.sh 2>&1 | tee $HOME/workspace/testing/test-run.log.txt
 

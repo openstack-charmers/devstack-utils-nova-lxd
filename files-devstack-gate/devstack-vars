@@ -1,10 +1,14 @@
 # setup the vars for devstack-gate to work
 export REPO_URL=https://git.openstack.org
 export ZUUL_URL=$HOME/workspace-cache
-export ZUUL_REF=HEAD
+export ZUUL_REF=${ZUUL_REF:-HEAD}
 export WORKSPACE=$HOME/workspace/testing
 
 export ZUUL_PROJECT=openstack/nova-lxd
 export ZUUL_BRANCH=${ZUUL_BRANCH:-master}
+
+# serverstack is really slow, so we need a big timeout!
+# This is 3 hours, which is useful.
+export BUILD_TIMEOUT=10800000
 
 # vim: filetype=sh

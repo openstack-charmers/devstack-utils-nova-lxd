@@ -35,7 +35,7 @@ sudo sed -i 's|/home/devuser:|/home/devuser:/bin/bash|g' /etc/passwd
 sudo apt update
 sudo apt upgrade -y
 sudo apt autoremove -y
-sudo apt install -y vim-nox silversearcher-ag byobu less bridge-utils python3-yaml
+sudo apt install -y vim-nox silversearcher-ag byobu less bridge-utils python3-yaml w3m
 # Note, the devstack-gate initialisation HUNG on python3-yaml setup, so this is just to
 # get around that issue.
 
@@ -121,8 +121,10 @@ sudo cp ${_dir}/proxy-vars /home/jenkins/bin
 sudo chown jenkins.jenkins /home/jenkins/bin/proxy-vars
 sudo cp ${_dir}/run-legacy-tempest-dsvm-lxd-ovs.sh /home/jenkins/bin
 sudo chown jenkins.jenkins /home/jenkins/bin/run-legacy-tempest-dsvm-lxd-ovs.sh
+sudo cp ${_dir}/show-errors.sh /home/jenkins/bin
+sudo chown jenkins.jenkins /home/jenkins/bin/show-errors.sh
 sudo mkdir -p /home/jenkins/.byobu
-sudo cp ${_dir}/keybindings.tmx /home/jenkins/.byobu/keybindings.tmux
+sudo cp ${_dir}/keybindings.tmux /home/jenkins/.byobu/keybindings.tmux
 sudo chown -R jenkins.jenkins /home/jenkins/.byobu
 
 # add sourcing the vars to the .profile for jenkins
