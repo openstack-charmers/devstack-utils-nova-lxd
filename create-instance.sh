@@ -11,7 +11,7 @@
 # bring in the common functions
 source common-functions.sh
 
-FLAVOR=m1.large
+FLAVOR=${FLAVOR:-m1.large}
 #SECURITY_GROUP=default
 
 function usage {
