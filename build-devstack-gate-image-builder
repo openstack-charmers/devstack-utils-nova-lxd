@@ -41,7 +41,7 @@ if [[ "$1" == "-h" || "$1" == "--help" ]]; then
 fi
 
 
-function check_existing_assets {
+function check_instance_exists {
 	# check if the image builder exists
 	does_instance_exist ${INSTANCE_NAME}
 	if [[ "$?" == "1" ]]; then
@@ -53,7 +53,9 @@ function check_existing_assets {
 			exit 0
 		fi
 	fi
+}
 
+function check_image_exists {
 	# check if the image exists
 	does_image_exist ${IMAGE_NAME}
 	if [[ "$?" == "1" ]]; then
@@ -76,9 +78,8 @@ assert_ssh_vars_are_set
 assert_os_vars_are_set
 echo " done."
 
-echo "Checking to see if instance or image exist..."
-check_existing_assets
-echo "Done."
+echo "Checking to see if the devstack-gate-builder instance ..."
+check_instance_exists
 
 # Phase 1 - create the instance -- this also adds to /etc/hosts if configured to do so.
 echo "Creating the server and applying an IP address ..."
@@ -98,6 +99,9 @@ run_remote_cmd $DEVSTACK_SSH_IDENTITY ubuntu ${floating_ip} configure/configure.
 
 # Phase 3 - build the devstack-gate image using the new devstack-gate-builder
 run_remote_cmd $DEVSTACK_SSH_IDENTITY ubuntu ${floating_ip} configure/build-image.sh
+
+echo "Checking to see if the devstack-gate instance ..."
+check_image_exists
 
 # phase 4 - upload the image to devstack
 run_remote_cmd $DEVSTACK_SSH_IDENTITY ubuntu ${floating_ip} configure/upload-image.sh
