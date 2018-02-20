@@ -1,7 +1,7 @@
 export DISTRO=ubuntu-minimal
 
 ## This will get dib to drop you into a shell on error, useful for debugging
-export break="after-error"
+#export break="after-error"
 
 export ZUUL_USER_SSH_PUBLIC_KEY=$HOME/configure/builder-key.pub
 
@@ -14,4 +14,7 @@ export DIB_DEV_USER_PWDLESS_SUDO=1
 export DIB_DEV_USER_PASSWORD=devuser
 
 # Disabled to build a 'full' devstack-gate image
-#export DIB_CUSTOM_PROJECTS_LIST_URL=file:///$HOME/configure/custom_projects.yaml
+export DIB_CUSTOM_PROJECTS_LIST_URL=file:///$HOME/configure/custom_projects.yaml
+
+# See to False to disabling the downloading of images.
+#export DOWNLOAD_DEFAULT_IMAGES=False
