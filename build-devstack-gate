@@ -77,7 +77,7 @@ echo "Done."
 
 # Phase 1 - create the instance -- this also adds to /etc/hosts if configured to do so.
 echo "Creating the server and applying an IP address ..."
-DONT_CONFIRM="true" $_dir/create-instance.sh ${INSTANCE_NAME} -i ${IMAGE_NAME}
+DONT_CONFIRM="true" FLAVOR=m1.xlarge $_dir/create-instance.sh ${INSTANCE_NAME} -i ${IMAGE_NAME}
 echo "Done creating instance."
 
 echo "Doing the initalisation to prepare the instance ..."
