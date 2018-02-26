@@ -39,6 +39,19 @@ function assert_ssh_vars_are_set {
 }
 
 
+
+## see if we are pre-version 3.0 of the openstack client.  Some of the commands change for it.
+unset OS_VERSION
+
+function which_openstack_version {
+	if [[ -z "$OS_VERSION" ]]; then
+		local _version=$(openstack --version 2>&1 | awk '{print $2}')
+		# take the first character of the version string
+		OS_VERSION=${_version:0:1}
+	fi
+}
+
+
 ## see if an instance exists; pass the variable as the first param
 # returns 1 if the instance does exist
 function does_instance_exist {
@@ -196,15 +209,24 @@ function get_floating_ip_address {
 	local _floating_ip
 	local _floating_ip_assigned
 	local _ifs
+	local _cmd_list
+	local _cmd_create
 
 	unset floating_ip_address   # return value
 	assert_os_vars_are_set
+
+	set -x
+	which_openstack_version
 
 	echo "Finding a free Floating IP address"
 	_ifs=IFS
 	IFS='
 	'
-	floating_ips=($(openstack floating ip list -c "Floating IP Address" -c "Fixed IP Address" -f value | sort -k 1))
+	if [[ "$OS_VERSION" == "2" ]]; then
+		floating_ips=($(openstack ip floating list -c "Floating IP Address" -c "Fixed IP Address" -f value | sort -k 1))
+	else
+		floating_ips=($(openstack floating ip list -c "Floating IP Address" -c "Fixed IP Address" -f value | sort -k 1))
+	fi
 	_floating_ip=
 	for floating_ip in ${floating_ips[@]}; do
 		echo $floating_ip | grep None 2>&1 > /dev/null
@@ -220,7 +242,11 @@ function get_floating_ip_address {
 	if [ "xxx" == "xxx$_floating_ip" ]; then
 		# create a floating IP address
 		echo "Didn't find one ... Creating a floating IP address"
-		_floating_ip=$(openstack floating ip create ext_net | grep "^| ip" | awk '{print $4}')
+		if [[ "$OS_VERSION" == "2" ]]; then
+			_floating_ip=$(openstack ip floating create | grep "^| ip" | awk '{print $4}')
+		else
+			_floating_ip=$(openstack floating ip create | grep "^| ip" | awk '{print $4}')
+		fi
 	fi
 	if [[ "$?" != "0" ]]; then
 		echo "Couldn't create a floating IP"

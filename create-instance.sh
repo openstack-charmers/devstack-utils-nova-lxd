@@ -133,7 +133,12 @@ get_floating_ip_address
 
 # Now finally assign it
 echo "Assigning $floating_ip_address to $DEVSTACK_NAME"
-openstack server add floating ip "$DEVSTACK_NAME" "$floating_ip_address"
+which_openstack_version
+if [[ "$OS_VERSION" == "2" ]]; then
+	openstack ip floating add "$floating_ip_address" "$DEVSTACK_NAME"
+else
+	openstack server add floating ip "$DEVSTACK_NAME" "$floating_ip_address"
+fi
 
 # add it to the /etc/hosts file -- but only if $DEVSTACK_MODIFY_ETC_HOSTS is set
 add_host_to_hosts "${DEVSTACK_NAME}" "${floating_ip_address}"
