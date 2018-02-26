@@ -30,7 +30,6 @@ function post_test_hook {
 }
 export -f post_test_hook
 
-export DEVSTACK_GATE_SETTINGS=/opt/stack/new/nova-lxd/devstack/tempest-dsvm-lxd-rc
 export DEVSTACK_GATE_SETTINGS=$HOME/workspace-cache/openstack/nova-lxd/devstack/tempest-dsvm-lxd-rc
 
 cd $HOME/workspace/testing

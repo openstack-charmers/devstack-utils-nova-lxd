@@ -33,9 +33,9 @@ sudo sed -i 's|/home/devuser:|/home/devuser:/bin/bash|g' /etc/passwd
 
 # install some useful stuff
 sudo apt update
-sudo apt upgrade -y
+#sudo apt upgrade -y
 sudo apt autoremove -y
-sudo apt install -y vim-nox silversearcher-ag byobu less bridge-utils python3-yaml w3m
+sudo apt install -y vim-nox silversearcher-ag byobu less bridge-utils python3-yaml w3m git-review
 # Note, the devstack-gate initialisation HUNG on python3-yaml setup, so this is just to
 # get around that issue.
 
