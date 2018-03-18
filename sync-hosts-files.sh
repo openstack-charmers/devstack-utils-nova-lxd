@@ -17,11 +17,13 @@ fi
 
 assert_os_vars_are_set
 
-servers=$(openstack server list -c Name -f value | egrep "^devstack")
+servers=$(openstack server list -c Name -f value | egrep "^(devstack|tinwood\-|ajkavanagh\-)")
 
 # remove all of the devstack entries from the /etc/hosts file
 echo "Deleting devstack entries from /etc/hosts"
 sudo sed -i "/devstack\S*\$/d" /etc/hosts
+sudo sed -i "/tinwood-\S*\$/d" /etc/hosts
+sudo sed -i "/ajkavanagh-\S*\$/d" /etc/hosts
 echo "Done deleting."
 
 # now add back in each of the hosts.
