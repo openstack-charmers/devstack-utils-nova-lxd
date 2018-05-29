@@ -94,7 +94,9 @@ function find_floating_ip_for {
 	fi
 	# eval the shell line
 	eval "$_addr_line"
+	_ifs=$IFS
 	IFS=', ' read -r -a _addrs <<< "$_addr_line"
+	IFS=$_ifs
 	if [[ "${#_addrs[@]}" == "1" ]]; then
 		unset floating_ip
 	fi
@@ -215,11 +217,10 @@ function get_floating_ip_address {
 	unset floating_ip_address   # return value
 	assert_os_vars_are_set
 
-	set -x
 	which_openstack_version
 
 	echo "Finding a free Floating IP address"
-	_ifs=IFS
+	_ifs=$IFS
 	IFS='
 	'
 	if [[ "$OS_VERSION" == "2" ]]; then
@@ -236,16 +237,16 @@ function get_floating_ip_address {
 			break
 		fi
 	done
-	IFS=_ifs
+	IFS=$_ifs
 
 	# if we didn't find the IP then create a new one
 	if [ "xxx" == "xxx$_floating_ip" ]; then
 		# create a floating IP address
 		echo "Didn't find one ... Creating a floating IP address"
 		if [[ "$OS_VERSION" == "2" ]]; then
-			_floating_ip=$(openstack ip floating create | grep "^| ip" | awk '{print $4}')
+			_floating_ip=$(openstack ip floating create ext_net | grep "^| ip" | awk '{print $4}')
 		else
-			_floating_ip=$(openstack floating ip create | grep "^| ip" | awk '{print $4}')
+			_floating_ip=$(openstack floating ip create ext_net | grep "^| ip" | awk '{print $4}')
 		fi
 	fi
 	if [[ "$?" != "0" ]]; then
@@ -257,9 +258,12 @@ function get_floating_ip_address {
 
 
 ## get the status of a server in ${1} .. returned in ${server_status}
-function get_server_status  {
+function get_server_status {
+	echo "Server is ${1}"
 	assert_os_vars_are_set
-	local status
-	eval $(openstack server show ${1} -f shell | egrep "^status")
-	server_status=${status}
+	#local os_status
+	echo "---Server is ${1}"
+	#eval $(openstack server show "${1}" -f shell | egrep "^status")
+	eval $(openstack server show "${1}" -f shell --prefix=os_ | egrep --color=never "^os_status")
+	server_status=${os_status}
 }

@@ -29,7 +29,7 @@ SERVER_NAME=${1}
 assert_os_vars_are_set
 
 # See if it exists
-does_instance_exist ${DEVSTACK_NAME}
+does_instance_exist ${SERVER_NAME}
 SERVER_EXISTS=$?
 
 if [[ "xxx$SERVER_EXISTS" == "xxx0" ]]; then
@@ -47,7 +47,8 @@ get_floating_ip_address
 # we can only assign the IP when it's not in the build state, so loop until it's ready
 while true; do
 	# get server status to ${server_status}
-	get_server_status $SERVER_NAME
+	echo "Server name is $SERVER_NAME"
+	get_server_status "${SERVER_NAME}"
 	#openstack server list -c Name -c Status -f value | grep "$SERVER_NAME" | grep BUILD 2>&1 > /dev/null
 	case ${server_status} in
 		ACTIVE)
@@ -77,7 +78,12 @@ printf "Floating ip: $floating_ip_address\n"
 are_you_sure "Are you sure?"
 if [[ ! -z "${_yes}" ]]; then
 	echo "Assigning the IP to the server"
-	openstack server add floating ip "$SERVER_NAME" "$_floating_ip"
+	which_openstack_version
+	if [[ "$OS_VERSION" == "2" ]]; then
+		openstack ip floating add "$floating_ip_address" "$SERVER_NAME"
+	else
+		openstack server add floating ip "$SERVER_NAME" "$floating_ip_address"
+	fi
 else
 	echo "Doing nothing."
 	exit 0

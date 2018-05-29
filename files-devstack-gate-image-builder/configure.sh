@@ -47,7 +47,7 @@ sed -i s/localaddress/$_ip_address/g "$_dir/proxy-vars"
 # etc-systemd-system.conf
 # also append the two lines to /etc/systemd/system.conf
 # - we'll assume that if they don't exist in the file that we need to add them.
-_ifs=IFS
+_ifs=$IFS
 IFS='
 '
 _lines=$(cat "$_dir/etc-systemd-system.conf")
