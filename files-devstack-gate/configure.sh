@@ -11,6 +11,11 @@ _script=$( basename $0 )
 
 IFACE="ens3"
 
+# set byobu ctrl-a feature, assuming byobu is present
+BYOBU_CTRL_A=$(which byobu-ctrl-a)
+if [[ "$?" == "0" ]]; then
+	${BYOBU_CTRL_A} screen
+fi
 
 # first fix up resolv.conf so we can get some software
 echo "nameserver 10.5.0.2" | sudo tee /etc/resolv.conf

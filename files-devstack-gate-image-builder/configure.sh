@@ -9,6 +9,12 @@ set -ex
 _dir="$( cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd)"
 _script=$( basename $0 )
 
+# set byobu ctrl-a feature, assuming byobu is present
+BYOBU_CTRL_A=$(which byobu-ctrl-a)
+if [[ "$?" == "0" ]]; then
+	${BYOBU_CTRL_A} screen
+fi
+
 # install some useful stuff
 sudo apt update
 sudo apt upgrade -y
