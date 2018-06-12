@@ -34,7 +34,7 @@ _ip_address=$(ip a | grep 10.5 | awk '{print $2}' | tr "/" "\n" | head -1 | tr -
 sed -i s/localaddress/$_ip_address/g "$_dir/etc-environment"
 # add the etc-environment lines to /etc/environment if the line length is less
 # than that of our etc-environment
-_lines_ours=$(cat etc-environment | wc -l)
+_lines_ours=$(cat "${_dir}/etc-environment" | wc -l)
 _lines_theirs=$(cat /etc/environment | wc -l)
 if (( $_lines_ours > $_lines_theirs )); then
 	echo "Updating /etc/environment"
@@ -66,6 +66,11 @@ if [[ ! -d $HOME/pylxd ]]; then
 	git clone https://github.com/lxc/pylxd.git $HOME/pylxd
 fi
 
+# also grab nova-lxd as it has useful things in it about what to run in devstack
+if [[ ! -d $HOME/nova-lxd ]]; then
+	git clone https://github.com/openstack/nova-lxd.git $HOME/nova-lxd
+fi
+
 # grab, but don't install the devstack repository
 if [[ ! -d $HOME/devstack ]]; then
 	git clone https://github.com/openstack-dev/devstack $HOME/devstack
@@ -80,3 +85,6 @@ cp $_dir/get-pip.py $HOME/devstack/files/get-pip.py
 # finally put dev stack local into the correct place - overwrite the existing file if necessary
 cp $_dir/devstack-local.conf $HOME/devstack/local.conf
 
+# create and copy the run-*.sh commmands to bin
+mkdir -p ${HOME}/bin
+cp $_dir/run-*.sh ${HOME}/bin
