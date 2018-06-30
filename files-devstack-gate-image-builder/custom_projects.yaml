@@ -17,6 +17,8 @@
 - project: openstack-infra/system-config
 - project: openstack-infra/tripleo-ci
 - project: openstack-dev/devstack
+- project: openstack/openstack-ansible-tests
+- project: openstack/openstack-ansible-os_nova
 - project: openstack/ceilometer
 - project: openstack/ceilometermiddleware
 - project: openstack/cinder

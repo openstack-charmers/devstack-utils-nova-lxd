@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # branch is master unless ZUUL_BRANCH is already set
-# this script should be run by the jenkins user.
+# this script should be run by the zuul user.
 
 _dir="$( cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd)"
 _script=$( basename $0 )

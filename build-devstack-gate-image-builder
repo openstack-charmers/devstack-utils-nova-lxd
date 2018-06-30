@@ -84,7 +84,8 @@ check_instance_exists
 
 # Phase 1 - create the instance -- this also adds to /etc/hosts if configured to do so.
 echo "Creating the server and applying an IP address ..."
-DONT_CONFIRM="true" $_dir/create-instance.sh ${INSTANCE_NAME} -f ${UBUNTU_SERIES}
+#DONT_CONFIRM="true" $_dir/create-instance.sh ${INSTANCE_NAME} -f ${UBUNTU_SERIES}
+$_dir/create-instance.sh ${INSTANCE_NAME} -f ${UBUNTU_SERIES}
 echo "Done creating instance."
 
 echo "Doing the initalisation to prepare for building the image ..."
@@ -97,6 +98,8 @@ echo "Done initialising image."
 
 # Phase 2 - initialise the instance to build the image
 run_remote_cmd $DEVSTACK_SSH_IDENTITY ubuntu ${floating_ip} configure/configure.sh
+#echo "Finishing early; run build and upload in the image builder"
+#exit 0
 
 # Phase 3 - build the devstack-gate image using the new devstack-gate-builder
 run_remote_cmd $DEVSTACK_SSH_IDENTITY ubuntu ${floating_ip} configure/build-image.sh

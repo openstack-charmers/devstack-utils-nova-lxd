@@ -39,7 +39,7 @@ _ip_address=$(ip a | grep 10.5 | awk '{print $2}' | tr "/" "\n" | head -1 | tr -
 sed -i s/localaddress/$_ip_address/g "$_dir/etc-environment"
 # add the etc-environment lines to /etc/environment if the line length is less
 # than that of our etc-environment
-_lines_ours=$(cat etc-environment | wc -l)
+_lines_ours=$(cat ${_dir}/etc-environment | wc -l)
 _lines_theirs=$(cat /etc/environment | wc -l)
 if (( $_lines_ours > $_lines_theirs )); then
 	echo "Updating /etc/environment"

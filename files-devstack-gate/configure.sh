@@ -12,10 +12,10 @@ _script=$( basename $0 )
 IFACE="ens3"
 
 # set byobu ctrl-a feature, assuming byobu is present
-BYOBU_CTRL_A=$(which byobu-ctrl-a)
-if [[ "$?" == "0" ]]; then
-	${BYOBU_CTRL_A} screen
-fi
+#BYOBU_CTRL_A=$(which byobu-ctrl-a)
+#if [[ "$?" == "0" ]]; then
+	#${BYOBU_CTRL_A} screen
+#fi
 
 # first fix up resolv.conf so we can get some software
 echo "nameserver 10.5.0.2" | sudo tee /etc/resolv.conf
@@ -30,8 +30,8 @@ sudo sed -i 's|127.0.0.1|10.5.0.2|g' /etc/dhcp/dhclient.conf
 echo "devstack-gate" | sudo tee /etc/hostname
 sudo hostname devstack-gate
 
-echo "jenkins ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/jenkins
-sudo chmod 440 /etc/sudoers.d/jenkins
+echo "zuul ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/zuul
+sudo chmod 440 /etc/sudoers.d/zuul
 
 # fix the ubuntu user so that it has a /bin/bash path
 sudo sed -i 's|/home/devuser:|/home/devuser:/bin/bash|g' /etc/passwd
@@ -51,9 +51,9 @@ if [[ ! -f "$HOME/.gitconfig" ]]; then
 	echo "Copying dot.gitconfig"
 	cp "${_dir}/dot.gitconfig" "$HOME/.gitconfig"
 fi
-## add the dot.gitconfig-jenkins to /home/jenkins/.gitconfig if the they are not present
-if ! grep "squid.internal" /home/jenkins/.gitconfig; then
-	cat "${_dir}/dot.gitconfig-jenkins" | sudo tee -a /home/jenkins/.gitconfig
+## add the dot.gitconfig-zuul to /home/zuul/.gitconfig if the they are not present
+if ! grep "squid.internal" /home/zuul/.gitconfig; then
+	cat "${_dir}/dot.gitconfig-zuul" | sudo tee -a /home/zuul/.gitconfig
 fi
 
 # install the no-proxy.sh bin file
@@ -113,34 +113,34 @@ echo 'Acquire::ForceIPv4 "true";' | sudo tee /etc/apt/apt.conf.d/90force-ipv4
 # and place the 90proxy-settings file into /etc/apt/apt/conf.d
 sudo cp ${_dir}/90proxy-settings /etc/apt/apt.conf.d/.
 
-# copy the jenkins user related scripts
+# copy the zuul user related scripts
 
-sudo -u jenkins mkdir /home/jenkins/bin
-sudo cp ${_dir}/setup-job.sh /home/jenkins/bin
-sudo chown jenkins.jenkins /home/jenkins/bin/setup-job.sh
-sudo cp ${_dir}/no-proxy.sh /home/jenkins/bin
-sudo chown jenkins.jenkins /home/jenkins/bin/no-proxy.sh
-sudo cp ${_dir}/devstack-vars /home/jenkins/bin
-sudo chown jenkins.jenkins /home/jenkins/bin/devstack-vars
-sudo cp ${_dir}/proxy-vars /home/jenkins/bin
-sudo chown jenkins.jenkins /home/jenkins/bin/proxy-vars
-sudo cp ${_dir}/run-legacy-tempest-dsvm-lxd-ovs.sh /home/jenkins/bin
-sudo chown jenkins.jenkins /home/jenkins/bin/run-legacy-tempest-dsvm-lxd-ovs.sh
-sudo cp ${_dir}/show-errors.sh /home/jenkins/bin
-sudo chown jenkins.jenkins /home/jenkins/bin/show-errors.sh
-sudo mkdir -p /home/jenkins/.byobu
-sudo cp ${_dir}/keybindings.tmux /home/jenkins/.byobu/keybindings.tmux
-sudo chown -R jenkins.jenkins /home/jenkins/.byobu
+sudo -u zuul mkdir /home/zuul/bin
+sudo cp ${_dir}/setup-job.sh /home/zuul/bin
+sudo chown zuul.zuul /home/zuul/bin/setup-job.sh
+sudo cp ${_dir}/no-proxy.sh /home/zuul/bin
+sudo chown zuul.zuul /home/zuul/bin/no-proxy.sh
+sudo cp ${_dir}/devstack-vars /home/zuul/bin
+sudo chown zuul.zuul /home/zuul/bin/devstack-vars
+sudo cp ${_dir}/proxy-vars /home/zuul/bin
+sudo chown zuul.zuul /home/zuul/bin/proxy-vars
+sudo cp ${_dir}/run-legacy-tempest-dsvm-lxd-ovs.sh /home/zuul/bin
+sudo chown zuul.zuul /home/zuul/bin/run-legacy-tempest-dsvm-lxd-ovs.sh
+sudo cp ${_dir}/show-errors.sh /home/zuul/bin
+sudo chown zuul.zuul /home/zuul/bin/show-errors.sh
+sudo mkdir -p /home/zuul/.byobu
+sudo cp ${_dir}/keybindings.tmux /home/zuul/.byobu/keybindings.tmux
+sudo chown -R zuul.zuul /home/zuul/.byobu
 
-# add sourcing the vars to the .profile for jenkins
-sudo -u jenkins sed -i "/devstack-vars\$/d" /home/jenkins/.profile
-echo "source \$HOME/bin/devstack-vars" | sudo -u jenkins tee -a /home/jenkins/.profile
+# add sourcing the vars to the .profile for zuul
+sudo -u zuul sed -i "/devstack-vars\$/d" /home/zuul/.profile
+echo "source \$HOME/bin/devstack-vars" | sudo -u zuul tee -a /home/zuul/.profile
 
-# copy the authorized keys over so we can login as jenkins
-sudo cp /home/devuser/.ssh/authorized_keys /home/jenkins/.ssh/authorized_keys
-sudo chown jenkins.jenkins /home/jenkins/.ssh/authorized_keys
+# copy the authorized keys over so we can login as zuul
+sudo cp /home/devuser/.ssh/authorized_keys /home/zuul/.ssh/authorized_keys
+sudo chown zuul.zuul /home/zuul/.ssh/authorized_keys
 
-# finally run the setup-job.sh script as the jenkins user
-sudo -u jenkins HOME=/home/jenkins /home/jenkins/bin/setup-job.sh
+# finally run the setup-job.sh script as the zuul user
+sudo -u zuul HOME=/home/zuul /home/zuul/bin/setup-job.sh
 
 echo "Configure Done."

@@ -9,7 +9,7 @@ export ZUUL_USER_SSH_PUBLIC_KEY=$HOME/configure/builder-key.pub
 export DIB_DEV_USER_USERNAME=devuser
 export DIB_DEV_USER_AUTHORIZED_KEYS=$HOME/configure/builder-key.pub
 
-export EXTRA_ELEMENTS=devuser
+export EXTRA_ELEMENTS="devuser "
 export DIB_DEV_USER_PWDLESS_SUDO=1
 export DIB_DEV_USER_PASSWORD=devuser
 
