@@ -60,9 +60,3 @@ for l in $_lines; do
 	fi
 done
 IFS=$_ifs
-
-# grab, but don't install the pylxd repository (we may need to mangle it before installation)
-if [[ ! -d $HOME/pylxd ]]; then
-	git clone https://github.com/lxc/pylxd.git $HOME/pylxd
-fi
-

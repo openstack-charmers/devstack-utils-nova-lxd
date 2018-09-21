@@ -111,7 +111,7 @@ function find_floating_ip_for {
 # $3 is the username@server details
 function wait_for_ssh {
 	local maxConnectionAttempts=10
-	local sleepSeconds=5
+	local sleepSeconds=10
 	echo "Checking for ssh connection ..."
 	local index=1
 	while (( $index <= $maxConnectionAttempts )); do
@@ -246,7 +246,7 @@ function get_floating_ip_address {
 		if [[ "$OS_VERSION" == "2" ]]; then
 			_floating_ip=$(openstack ip floating create ext_net | grep "^| ip" | awk '{print $4}')
 		else
-			_floating_ip=$(openstack floating ip create ext_net | grep "^| ip" | awk '{print $4}')
+			_floating_ip=$(openstack floating ip create ext_net | grep "^| floating_ip_address" | awk '{print $4}')
 		fi
 	fi
 	if [[ "$?" != "0" ]]; then

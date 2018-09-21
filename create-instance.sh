@@ -42,9 +42,11 @@ DEVSTACK_NAME=${1}
 if [[ -z $2  || "$2" == "-f" ]]; then
 	# pick a flavour to search on
 	if [[ ! -z $3 ]]; then
-		IMAGE_GREP="released.*${3}.*amd64.*\.img"
+		#IMAGE_GREP="released.*${3}.*amd64.*\.img"
+		IMAGE_GREP=".*${3}.*amd64.*\.img"
 	else
-		IMAGE_GREP="released.*xenial.*amd64.*\.img"
+		#IMAGE_GREP="released.*xenial.*amd64.*\.img"
+		IMAGE_GREP=".*xenial.*amd64.*\.img"
 	fi
 else
 	if [[ "$2" != "-i" ]]; then
