@@ -17,7 +17,7 @@ fi
 
 # install some useful stuff
 sudo apt update
-sudo apt upgrade -y
+#sudo apt upgrade -y
 sudo apt autoremove -y
 sudo apt install -y python-pip silversearcher-ag libpython-dev libpython3-dev
 
