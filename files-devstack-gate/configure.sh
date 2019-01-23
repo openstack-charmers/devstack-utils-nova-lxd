@@ -52,6 +52,8 @@ if [[ ! -f "$HOME/.gitconfig" ]]; then
 	cp "${_dir}/dot.gitconfig" "$HOME/.gitconfig"
 fi
 ## add the dot.gitconfig-zuul to /home/zuul/.gitconfig if the they are not present
+sudo touch /home/zuul/.gitconfig
+sudo chown zuul.zuul /home/zuul/.gitconfig
 if ! grep "squid.internal" /home/zuul/.gitconfig; then
 	cat "${_dir}/dot.gitconfig-zuul" | sudo tee -a /home/zuul/.gitconfig
 fi
