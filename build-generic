@@ -28,7 +28,7 @@ function usage {
 	printf "\n\nwhere:\n"
 	printf " -h | --help     : this usage page\n"
 	printf " <server-name>   : the server name (e.g. devstack)\n"
-	printf " <ubuntu-flavor> : the flavor - e.g. xenial, etc.\n\n"
+	printf " <ubuntu-flavor> : the flavor - e.g. bionic, etc.\n\n"
 }
 
 

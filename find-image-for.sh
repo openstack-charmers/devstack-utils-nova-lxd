@@ -13,12 +13,12 @@ source common-functions.sh
 function usage {
 	printf "\nFind an image based on the passed parameter(s)\n"
 	printf "\nUSAGE:\n\n$0 [-h|--help] [-f] [<image-grep>]\n"
-	printf "\nThe script will find the latest version of the <ubuntu-flavor> (default xenial)\n"
+	printf "\nThe script will find the latest version of the <ubuntu-flavor> (default bionic)\n"
 	printf "if -f is passed to the script and with the optional name, otherwise it will\n"
 	printf "just grep for the image and find the LAST one."
 	printf "\n\nwhere:\n"
 	printf " -h | --help     : this usage page\n"
-	printf " -f | --flavor   : do a specific search for an ubuntu image type (e.g. xenial, trusty)"
+	printf " -f | --flavor   : do a specific search for an ubuntu image type (e.g. bionic, trusty)"
 	printf " <image-grep>    : the image part to search for\n\n"
 }
 
@@ -32,7 +32,7 @@ if [[ -z $1  || "$1" == "-f"  || "$1" == "--flavor" ]]; then
 	if [[ ! -z $2 ]]; then
 		IMAGE_GREP="released.*${2}.*amd64"
 	else
-		IMAGE_GREP="released.*xenial.*amd64"
+		IMAGE_GREP="released.*bionic.*amd64"
 	fi
 else
 	IMAGE_GREP="${1}"

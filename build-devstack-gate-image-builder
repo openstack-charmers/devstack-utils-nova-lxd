@@ -20,7 +20,7 @@ source common-functions.sh
 
 IMAGE_NAME=${IMAGE_NAME:-devstack-gate}
 INSTANCE_NAME=${INSTANCE_NAME:-devstack-gate-image-builder}
-UBUNTU_SERIES=${UBUNTU_SERIES:-xenial}
+UBUNTU_SERIES=${UBUNTU_SERIES:-bionic}
 
 
 function usage {

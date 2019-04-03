@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## create, configure, and build a devstack instance using the latest xenial nightly.
+## create, configure, and build a devstack instance using the latest bionic nightly.
 
 # This function relies on the keypair name being in the env variables:
 # DEVSTACK_KEYPAIR_NAME  -- the name of the same keypair as below for all instances.
@@ -14,7 +14,7 @@ _script=$( basename $0 )
 source common-functions.sh
 
 INSTANCE_NAME=${INSTANCE_NAME:-devstack}
-IMAGE_FLAVOR=${IMAGE_FLAVOR:-xenial}
+IMAGE_FLAVOR=${IMAGE_FLAVOR:-bionic}
 
 
 function usage {

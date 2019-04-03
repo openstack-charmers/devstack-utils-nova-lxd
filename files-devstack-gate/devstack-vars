@@ -6,6 +6,7 @@ export WORKSPACE=$HOME/workspace/testing
 
 export ZUUL_PROJECT=openstack/nova-lxd
 export ZUUL_BRANCH=${ZUUL_BRANCH:-master}
+export LXD_BACKEND_DRIVER=default
 
 # serverstack is really slow, so we need a big timeout!
 # This is 3 hours, which is useful.

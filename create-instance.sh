@@ -18,13 +18,13 @@ function usage {
 	printf "\n Build a devstack related instance amd64 server image on serverstack\n"
 	printf "\nUSAGE:\n\n$0 [-h|--help] <server-name> [<ubuntu-flavor>]\n"
 	printf "\nUSAGE:\n\n$0 [-h|--help] <server-name> [-f <ubuntu-flavor> | -i <image-name>]\n"
-	printf "\nThe script will find the latest version of the <ubuntu-flavor> (default xenial)\n"
+	printf "\nThe script will find the latest version of the <ubuntu-flavor> (default bionic)\n"
 	printf "and build an m1.large instance on serverstack and assign an virtual IP.\n"
 	printf "This script only builds amd64 based machines at present.\n"
 	printf "\n\nwhere:\n"
 	printf " -h | --help     : this usage page\n"
 	printf " <server-name>   : the server name (e.g. devstack)\n"
-	printf " <ubuntu-flavor> : the flavor - e.g. xenial, etc.\n\n"
+	printf " <ubuntu-flavor> : the flavor - e.g. bionic, etc.\n\n"
 }
 
 if [[ "$1" == "-h" || "$1" == "--help" ]]; then
@@ -45,8 +45,8 @@ if [[ -z $2  || "$2" == "-f" ]]; then
 		#IMAGE_GREP="released.*${3}.*amd64.*\.img"
 		IMAGE_GREP=".*${3}.*amd64.*\.img"
 	else
-		#IMAGE_GREP="released.*xenial.*amd64.*\.img"
-		IMAGE_GREP=".*xenial.*amd64.*\.img"
+		#IMAGE_GREP="released.*bionic.*amd64.*\.img"
+		IMAGE_GREP=".*bionic.*amd64.*\.img"
 	fi
 else
 	if [[ "$2" != "-i" ]]; then
