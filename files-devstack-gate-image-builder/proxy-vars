@@ -2,7 +2,7 @@
 # for devstack
 export HTTP_PROXY=http://squid.internal:3128
 export http_proxy=http://squid.internal:3128
-export HTTPS_PROXY=https://squid.internal:3128
-export https_proxy=https://squid.internal:3128
+export HTTPS_PROXY=http://squid.internal:3128
+export https_proxy=http://squid.internal:3128
 export NO_PROXY="localhost,127.0.0.1,localaddress"
 export no_proxy="localhost,127.0.0.1,localaddress"

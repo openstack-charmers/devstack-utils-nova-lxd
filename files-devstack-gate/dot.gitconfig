@@ -5,4 +5,4 @@
 [http]
   proxy = http://squid.internal:3128
 [https]
-  proxy = https://squid.internal:3128
+  proxy = http://squid.internal:3128
