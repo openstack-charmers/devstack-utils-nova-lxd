@@ -193,12 +193,20 @@ function get_image_name_and_id_from_grep {
 
 
 ## Ask if you are sure. Question text is in ${1}
+# Note, if the DEFAULT_TO_YES environment variable is set to 'yes|y', then assume the response is yes
+# returns _yes=1 if yes, else _yes is unset
 function are_you_sure {
-	read -r -p "${1} [y/N]:" response
-	response=${response,,}		# to lower case
 	unset _yes
-	if [[ "$response" =~ ^(yes|y)$ ]]; then
+	local _default_yes
+	_default_yes=${DEFAULT_TO_YES,,}	# to lowercase
+	if [[ "$_default_yes" =~ ^(yes|y)$ ]]; then
 		_yes=1
+	else
+		read -r -p "${1} [y/N]:" response
+		response=${response,,}		# to lower case
+		if [[ "$response" =~ ^(yes|y)$ ]]; then
+			_yes=1
+		fi
 	fi
 }
 
